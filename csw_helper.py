@@ -2,9 +2,11 @@
 import peewee
 from cfg import pycsw_db
 
+
 class Records(peewee.Model):
     class Meta:
         database = pycsw_db
+
     identifier = peewee.TextField(null=False, index=True, primary_key=True, unique=True)
     typename = peewee.TextField(null=False)
     schema = peewee.TextField(null=False)
@@ -76,10 +78,14 @@ class MRecords(object):
         entry.execute()
         return True
 
-    def add_or_update(self, uid, postdata):
-        if self.get_by_uid(postdata['identifier']):
-            print('To Del ..................')
-            self.delete(postdata['identifier'])
+    def add_or_update(self, postdata, force=False):
+        uid = postdata['identifier']
+        if self.get_by_uid(uid):
+            if force:
+                print('To Del ..................')
+                self.delete(uid)
+            else:
+                return
         self.add(uid, postdata)
 
     def add(self, uid, postdata):
