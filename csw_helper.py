@@ -1,11 +1,11 @@
 # -*- coding:utf-8 -*-
 import peewee
+from peewee import SqliteDatabase
 
 try:
-    from cfg import pycsw_db
+    from cfg import CSW_DB
+    pycsw_db = SqliteDatabase(CSW_DB)
 except:
-    from peewee import SqliteDatabase
-
     pycsw_db = SqliteDatabase('xx_meta.db')
 
 
