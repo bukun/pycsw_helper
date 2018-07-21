@@ -1,22 +1,35 @@
+'''
+To run the script, run the following command the same direcotry.
+
+    git clone https://github.com/bukun/pycsw_helper.git
+'''
+import os
+from tornado.escape import xhtml_unescape
+from torcms.model.post_model import MPost
+import html2text
 import uuid
 from pycsw_helper.csw_helper import MRecords
 
 mrec = MRecords()
 
-def insert_into_db():
-    out_dic = {"identifier": uuid.uuid1(),
+h = html2text.HTML2Text()
+
+
+def insert_into_db(postinfo):
+    ab = h.handle(xhtml_unescape(postinfo.cnt_html))
+    out_dic = {"identifier": 'uid-wdc-rre-{uid}'.format(uid=postinfo.uid),
                "typename": '',
                "schema": '',
                "mdsource": '',
                "insert_date": '',
                "xml": "",
-               "anytext": '',
+               "anytext": ab,
                "language": '',
                "type": 'Zip File',
-               "title": '',
-               "title_alternate": '',
-               "abstract": '',
-               "keywords": '',
+               "title": postinfo.title,
+               "title_alternate": postinfo.title,
+               "abstract": ab,
+               "keywords": postinfo.keywords,
                "keywordstype": '',
                "parentidentifier": '',
                "relation": '',
@@ -31,7 +44,7 @@ def insert_into_db():
                "securityconstraints": '',
                "accessconstraints": '',
                "otherconstraints": '',
-               "date": '',
+               "date": postinfo.date,
                "date_revision": '',
                "date_creation": '',
                "date_publication": '',
@@ -59,7 +72,14 @@ def insert_into_db():
                "specificationtitle": '',
                "specificationdate": '',
                "specificationdatetype": '',
-               "links": ''}
+               # name,description,protocol,url[^„,[^„,]]”
+               "links": "{name},{desc},{prot},url[{url1}]".format(
+                   name='mm',
+                   desc='ab',
+                   prot='cc', url1='http://eng.wdc.cn/info/' + postinfo.uid
+               )}
+
+    print(out_dic['links'])
 
     # out_dic['conditionapplyingtoaccessanduse'] = raw_dic['USELIMIT'.lower()]
     out_dic["organization"] = 'OSGeo China Chapter'
@@ -67,5 +87,14 @@ def insert_into_db():
     # out_dic['date_publication'] = raw_dic['PUBTIME'.lower()]
     out_dic["source"] = 'http://www.maphub.cn'
     out_dic['publisher'] = 'OSGeo China Chapter'
-
     mrec.add_or_update(out_dic, force=True)
+
+
+def run_export():
+    all_recs = MPost.query_all(kind='9', limit=10000)
+    for postinfo in all_recs:
+        insert_into_db(postinfo)
+
+
+if __name__ == '__main__':
+    run_export()
