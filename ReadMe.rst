@@ -81,15 +81,17 @@ http://0.0.0.0:8000/?service=CSW&request=GetCapabilities
 
 http://0.0.0.0:8000/?service=CSW&version=2.0.2&request=GetCapabilities
 
-查看数据库
+Access via HTTP
 ---------------------------------------------
 
 cp tests/suites/cite/data/cite.db /tmp
 
 CSW version 3.0.0
 
-http://0.0.0l0:8000/csw?mode=sru&operation=searchRetrieve&query=&maximumRecords=5&startRecord=0
+http://0.0.0.0:8000/csw?mode=sru&operation=searchRetrieve&query=&maximumRecords=5&startRecord=0
 
-http://0.0.0l0:8000/csw?service=CSW&version=3.0.0&request=GetRecordById&ElementSetName=full&Id=urn:uuid:d28cde50-85d9-11e8-a5c4-00163e05d7bfi
+http://0.0.0.0:8000/csw?service=CSW&version=3.0.0&request=GetRecordById&ElementSetName=full&Id=urn:uuid:d28cde50-85d9-11e8-a5c4-00163e05d7bfi
 
+In Json format
 
+http://0.0.0.0:8000/csw?service=CSW&version=3.0.0&request=GetRecordById&ElementSetName=full&Id=wdcrre-95285&outputFormat=application/json
