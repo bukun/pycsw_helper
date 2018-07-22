@@ -1,4 +1,5 @@
-# pycsw_helper
+Introduction
+======================================
 
 Help to convert any metadata in "dict" into pycsw database.
 
